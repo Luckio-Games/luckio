@@ -340,10 +340,12 @@ class RocketGame {
         // Показываем панель ставок
         document.getElementById('bet-panel').classList.remove('hidden');
 
-        // Сброс позиции ракеты
+        // Сброс позиции ракеты и важно: удаляем класс display:none который мог быть добавлен
         if (this.rocketElement) {
             this.rocketElement.style.bottom = '20px';
             this.rocketElement.style.left = '20px';
+            this.rocketElement.style.display = ''; // Убираем display none если был
+            this.rocketElement.style.opacity = '1'; // Возвращаем видимость
             this.rocketElement.classList.remove('crashed', 'flying');
         }
 
