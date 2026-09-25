@@ -172,6 +172,21 @@ class LuckioAPI {
         }
     }
 
+    // Получить пользователя по Telegram ID
+    async getUserByTelegramId(telegramId) {
+        try {
+            if (!telegramId) {
+                this.log('Telegram ID не указан', 'warn');
+                return null;
+            }
+            
+            return await this.get(`/api/user/${telegramId}`);
+        } catch (error) {
+            this.log(`Не удалось получить пользователя ${telegramId}: ${error.message}`, 'warn');
+            return null;
+        }
+    }
+
     // Получить баланс
     async getBalance() {
         try {

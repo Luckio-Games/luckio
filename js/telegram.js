@@ -11,7 +11,7 @@ class TelegramApp {
         this.init();
     }
 
-    init() {
+    async init() {
         // Проверяем доступность Telegram WebApp
         if (window.Telegram && window.Telegram.WebApp) {
             this.isAvailable = true;
@@ -21,7 +21,7 @@ class TelegramApp {
             this.webApp.ready();
             this.webApp.expand();
             
-            // Получаем данные пользователя
+            // Получаем данные пользователя из Telegram
             this.user = this.webApp.initDataUnsafe?.user || null;
             
             // Получаем тему
@@ -40,10 +40,53 @@ class TelegramApp {
                 user: this.user,
                 theme: this.theme
             });
+            
+            // Загружаем данные пользователя с backend
+            await this.loadUserFromBackend();
         } else {
             // DEV режим - Telegram недоступен
             console.log('DEV mode: Telegram WebApp not available');
             this.setupDevMode();
+        }
+    }
+
+    // Загрузка данных пользователя с backend
+    async loadUserFromBackend() {
+        // Если пользователь не найден, выходим
+        if (!this.user || !this.user.id) {
+            console.log('Telegram user ID not available');
+            return;
+        }
+        
+        // Проверяем доступность API
+        if (!window.LuckioAPI) {
+            console.log('API client not available');
+            return;
+        }
+        
+        try {
+            // Создаём экземпляр API если его нет
+            if (!this.api) {
+                this.api = new window.LuckioAPI();
+            }
+            
+            // Запрашиваем данные пользователя с backend
+            const response = await this.api.getUserByTelegramId(this.user.id);
+            
+            if (response && response.success) {
+                // Сохраняем данные пользователя с backend
+                this.backendUser = response.user;
+                this.isNewUser = response.isNew || false;
+                
+                console.log('User loaded from backend:', {
+                    telegramId: this.backendUser.telegramId,
+                    isNew: this.isNewUser
+                });
+            } else {
+                console.log('Failed to load user from backend, using Telegram data');
+            }
+        } catch (error) {
+            console.log('Error loading user from backend:', error.message);
         }
     }
 
