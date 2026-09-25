@@ -24,7 +24,7 @@ class DebugPanel {
         setTimeout(() => {
             this.createPanel();
             this.updateData();
-        }, 500);
+        }, 1000);
     }
 
     createPanel() {
