@@ -140,6 +140,33 @@ class RocketGame {
             return;
         }
 
+        // КРИТИЧЕСКИ ВАЖНО: Сбрасываем состояние ракеты перед новым запуском
+        this.rocketElement = document.getElementById('rocket');
+        if (this.rocketElement) {
+            // Убираем все старые классы
+            this.rocketElement.classList.remove('crashed', 'flying');
+            
+            // Сбрасываем все inline-стили
+            this.rocketElement.style.bottom = '20px';
+            this.rocketElement.style.left = '20px';
+            this.rocketElement.style.display = '';
+            this.rocketElement.style.opacity = '1';
+            this.rocketElement.style.transform = '';
+            this.rocketElement.style.visibility = 'visible';
+        }
+
+        // Очищаем старые частицы
+        const particlesContainer = document.getElementById('particles');
+        if (particlesContainer) {
+            particlesContainer.innerHTML = '';
+        }
+
+        // Сбрасываем множитель на UI
+        const multiplierValue = document.querySelector('.multiplier-value');
+        if (multiplierValue) {
+            multiplierValue.textContent = '1.00x';
+        }
+
         // Инициализация игры
         this.isPlaying = true;
         this.multiplier = 1.00;
@@ -148,6 +175,10 @@ class RocketGame {
         // Скрываем панель ставок
         const betPanel = document.getElementById('bet-panel');
         if (betPanel) betPanel.classList.add('hidden');
+        
+        // Скрываем панель результата если она была видна
+        const resultPanel = document.getElementById('result-panel');
+        if (resultPanel) resultPanel.classList.add('hidden');
         
         // Показываем панель забора
         const cashoutPanel = document.getElementById('cashout-panel');
@@ -158,7 +189,6 @@ class RocketGame {
         if (currentBetEl) currentBetEl.textContent = this.currentBet;
 
         // Запускаем ракету
-        this.rocketElement = document.getElementById('rocket');
         if (this.rocketElement) this.rocketElement.classList.add('flying');
 
         // Добавляем glow к множителю
