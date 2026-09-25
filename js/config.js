@@ -4,8 +4,8 @@
 const LUCKIO_CONFIG = {
     // Backend API URL
     // Для локальной разработки: 'http://localhost:3000'
-    // Для продакшена: замени на свой URL (например, 'https://your-domain.com')
-    API_BASE_URL: 'http://localhost:3000',
+    // Для продакшена: 'https://luckio-api.onrender.com'
+    API_BASE_URL: 'https://luckio-api.onrender.com',
     
     // Timeout для запросов (в миллисекундах)
     API_TIMEOUT: 5000,

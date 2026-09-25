@@ -66,6 +66,62 @@ app.get('/api/user', (req, res) => {
     });
 });
 
+// GET /api/user/:telegramId - получить пользователя по Telegram ID
+app.get('/api/user/:telegramId', (req, res) => {
+    const { telegramId } = req.params;
+    
+    // Валидация telegramId
+    const userId = parseInt(telegramId, 10);
+    
+    if (isNaN(userId) || userId <= 0) {
+        return res.status(400).json({
+            success: false,
+            error: 'Некорректный Telegram ID. Должен быть положительным числом'
+        });
+    }
+    
+    // Тестовые данные пользователей (in-memory)
+    const users = {
+        123456789: {
+            telegramId: 123456789,
+            firstName: 'TestUser',
+            lastName: 'Dev',
+            username: 'test_player'
+        },
+        987654321: {
+            telegramId: 987654321,
+            firstName: 'Иван',
+            lastName: 'Петров',
+            username: 'ivan_petrov'
+        }
+    };
+    
+    // Ищем пользователя
+    const user = users[userId];
+    
+    if (!user) {
+        // Если пользователь не найден, создаём нового с дефолтными данными
+        const newUser = {
+            telegramId: userId,
+            firstName: 'User',
+            lastName: null,
+            username: `user_${userId}`
+        };
+        
+        return res.json({
+            success: true,
+            user: newUser,
+            isNew: true
+        });
+    }
+    
+    res.json({
+        success: true,
+        user: user,
+        isNew: false
+    });
+});
+
 // GET /api/balance - получить баланс
 app.get('/api/balance', (req, res) => {
     res.json({

@@ -127,7 +127,9 @@ class TelegramApp {
         this.user = {
             id: 123456789,
             first_name: 'Player',
+            last_name: null,
             username: 'dev_player',
+            photo_url: null,
             is_dev: true
         };
         
