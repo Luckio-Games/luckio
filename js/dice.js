@@ -47,10 +47,31 @@ class LuckyDiceGame {
                 betButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 
+                // Очищаем custom input
+                const customInput = document.getElementById('custom-dice-bet-input');
+                if (customInput) customInput.value = '';
+                
                 // Обновляем информацию
                 this.updateBetInfo();
             });
         });
+        
+        // Обработка custom bet input
+        const customInput = document.getElementById('custom-dice-bet-input');
+        if (customInput) {
+            customInput.addEventListener('input', () => {
+                const customBet = parseInt(customInput.value);
+                
+                if (customBet && customBet >= 1) {
+                    // Убираем активность со всех кнопок
+                    betButtons.forEach(b => b.classList.remove('active'));
+                    
+                    // Устанавливаем custom ставку
+                    this.currentBet = customBet;
+                    this.updateBetInfo();
+                }
+            });
+        }
     }
 
     setupRollButton() {
@@ -79,7 +100,12 @@ class LuckyDiceGame {
     rollDice() {
         if (this.isRolling) return;
 
-        // Проверка баланса
+        // Валидация ставки
+        if (this.currentBet < 1) {
+            this.app.showNotification('Ставка должна быть не меньше 1 ⭐', 'error');
+            return;
+        }
+
         if (this.currentBet > this.app.balance) {
             this.app.showNotification('Недостаточно средств', 'error');
             return;
@@ -94,7 +120,7 @@ class LuckyDiceGame {
         
         this.isRolling = true;
 
-        // Скрываем панель ставок
+        // ВАЖНО: НЕ скрываем панель ставок полностью, только делаем disabled
         const betPanel = document.getElementById('dice-bet-panel');
         if (betPanel) {
             betPanel.style.opacity = '0.5';
@@ -218,6 +244,13 @@ class LuckyDiceGame {
         if (resultAmount) {
             resultAmount.textContent = profit >= 0 ? `+${profit} ⭐` : `${profit} ⭐`;
             resultAmount.style.color = profit >= 0 ? '#4ade80' : '#f87171';
+        }
+
+        // ВАЖНО: Возвращаем панель ставок в активное состояние
+        const betPanel = document.getElementById('dice-bet-panel');
+        if (betPanel) {
+            betPanel.style.opacity = '1';
+            betPanel.style.pointerEvents = 'auto';
         }
 
         resultPanel.classList.remove('hidden');

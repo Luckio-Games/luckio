@@ -87,10 +87,31 @@ class RocketGame {
                 betButtons.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 
+                // Очищаем custom input
+                const customInput = document.getElementById('custom-bet-input');
+                if (customInput) customInput.value = '';
+                
                 // Обновляем потенциальный выигрыш
                 this.updatePotentialWin();
             });
         });
+        
+        // Обработка custom bet input
+        const customInput = document.getElementById('custom-bet-input');
+        if (customInput) {
+            customInput.addEventListener('input', () => {
+                const customBet = parseInt(customInput.value);
+                
+                if (customBet && customBet >= 1) {
+                    // Убираем активность со всех кнопок
+                    betButtons.forEach(b => b.classList.remove('active'));
+                    
+                    // Устанавливаем custom ставку
+                    this.currentBet = customBet;
+                    this.updatePotentialWin();
+                }
+            });
+        }
     }
 
     setupGameButtons() {
@@ -127,7 +148,12 @@ class RocketGame {
     }
 
     startGame() {
-        // Проверка баланса
+        // Валидация ставки
+        if (this.currentBet < 1) {
+            this.app.showNotification('Ставка должна быть не меньше 1 ⭐', 'error');
+            return;
+        }
+        
         if (this.currentBet > this.app.balance) {
             this.app.showNotification('Недостаточно средств', 'error');
             return;
@@ -172,9 +198,7 @@ class RocketGame {
         this.multiplier = 1.00;
         this.crashPoint = this.generateCrashPoint();
 
-        // Скрываем панель ставок
-        const betPanel = document.getElementById('bet-panel');
-        if (betPanel) betPanel.classList.add('hidden');
+        // ВАЖНО: НЕ скрываем bet-panel, он остаётся видимым
         
         // Скрываем панель результата если она была видна
         const resultPanel = document.getElementById('result-panel');
@@ -332,6 +356,8 @@ class RocketGame {
         // Скрываем панель забора
         document.getElementById('cashout-panel').classList.add('hidden');
 
+        // ВАЖНО: НЕ скрываем bet-panel, он остаётся видимым для быстрого рестарта
+
         // Показываем панель результата
         const resultPanel = document.getElementById('result-panel');
         resultPanel.classList.remove('hidden');
@@ -367,8 +393,7 @@ class RocketGame {
         // Скрываем панель результата
         document.getElementById('result-panel').classList.add('hidden');
         
-        // Показываем панель ставок
-        document.getElementById('bet-panel').classList.remove('hidden');
+        // ВАЖНО: bet-panel уже видима, ничего не делаем
 
         // Сброс позиции ракеты и важно: удаляем класс display:none который мог быть добавлен
         if (this.rocketElement) {

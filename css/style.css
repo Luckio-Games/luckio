@@ -1293,6 +1293,45 @@ body {
     cursor: not-allowed;
 }
 
+/* Custom Bet Input Section */
+.custom-bet-section {
+    margin-top: 16px;
+}
+
+.custom-bet-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    outline: none;
+    backdrop-filter: blur(10px);
+}
+
+.custom-bet-input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+.custom-bet-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+.custom-bet-input::-webkit-outer-spin-button,
+.custom-bet-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.custom-bet-input[type=number] {
+    -moz-appearance: textfield;
+}
+
 /* Потенциальный выигрыш */
 .potential-win {
     display: flex;
