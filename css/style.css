@@ -1,0 +1,2408 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --warning-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+    --dark-bg: #0a0e27;
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-secondary: #a0aec0;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(255, 255, 255, 0.2);
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    min-height: 100vh;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(159, 122, 234, 0.3) 0%, transparent 50%);
+    background-attachment: fixed;
+}
+
+.app {
+    max-width: 480px;
+    margin: 0 auto;
+    min-height: 100vh;
+    position: relative;
+    padding-bottom: 80px;
+}
+
+/* Страницы */
+.page {
+    display: none;
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page.active {
+    display: block;
+    animation: pageEnter 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.page.exiting {
+    animation: pageExit 0.3s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes pageExit {
+    from {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.98);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Хедер */
+.header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+    animation: logoGlow 3s ease-in-out infinite;
+    text-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+}
+
+@keyframes logoGlow {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px rgba(102, 126, 234, 0.5));
+    }
+    50% {
+        filter: drop-shadow(0 0 15px rgba(102, 126, 234, 0.8));
+    }
+}
+
+.balance-card {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card-bg);
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s;
+}
+
+.balance-card:hover::before {
+    left: 100%;
+}
+
+.balance-card:active {
+    transform: scale(0.98);
+}
+
+.balance-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.balance-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.star {
+    font-size: 18px;
+    display: inline-block;
+    animation: starRotate 4s linear infinite;
+}
+
+@keyframes starRotate {
+    0%, 90% {
+        transform: rotate(0deg);
+    }
+    95% {
+        transform: rotate(20deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* Контент */
+.content {
+    padding: 20px;
+    animation: contentFadeIn 0.6s ease 0.2s both;
+}
+
+@keyframes contentFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* DEV контролы */
+.dev-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.dev-btn {
+    flex: 1;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--success-gradient);
+    color: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.dev-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.dev-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.dev-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+}
+
+.dev-btn:active {
+    transform: scale(0.95);
+}
+
+.dev-btn.reset {
+    background: var(--secondary-gradient);
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
+
+.dev-btn.reset:hover {
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+}
+
+/* Игровые карточки */
+.game-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.game-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 24px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: cardSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.1s; }
+.game-card:nth-child(2) { animation-delay: 0.2s; }
+.game-card:nth-child(3) { animation-delay: 0.3s; }
+.game-card:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes cardSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.game-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: 0;
+}
+
+.game-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.3);
+}
+
+.game-card:hover::before {
+    opacity: 0.1;
+}
+
+.game-card:active {
+    transform: translateY(-4px) scale(0.98);
+}
+
+.game-card.premium {
+    border-color: rgba(159, 122, 234, 0.5);
+    box-shadow: 0 8px 32px rgba(159, 122, 234, 0.2);
+}
+
+.game-card.premium:hover {
+    box-shadow: 0 12px 40px rgba(159, 122, 234, 0.4);
+}
+}
+
+.game-card.legendary {
+    border-color: rgba(255, 215, 0, 0.5);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.2);
+}
+
+.card-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.game-card:hover .card-icon {
+    transform: scale(1.15) translateY(-5px);
+    filter: drop-shadow(0 8px 16px rgba(102, 126, 234, 0.5));
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.game-card h3 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.game-card:hover h3 {
+    transform: translateY(-2px);
+    color: #ffffff;
+}
+
+.game-card p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.game-card:hover p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.case-price {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.play-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--primary-gradient);
+    color: white;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.play-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.play-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.play-btn:active {
+    transform: scale(0.95);
+}
+
+.play-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.play-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.play-btn:disabled:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* История */
+.history-section {
+    margin-top: 30px;
+}
+
+.history-section h2 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.history-item {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-game {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.history-result {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.history-amount {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.history-amount.win {
+    color: #4ade80;
+}
+
+.history-amount.lose {
+    color: #f87171;
+}
+
+.history-empty {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+/* Профиль */
+.profile-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 30px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
+}
+
+.profile-avatar {
+    font-size: 80px;
+    margin-bottom: 16px;
+}
+
+.profile-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.profile-balance {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary-gradient);
+    padding: 12px 24px;
+    border-radius: 20px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+/* Статистика */
+.stats-section,
+.financial-stats,
+.full-history-section,
+.settings-section {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
+}
+
+.stats-section h3,
+.financial-stats h3,
+.full-history-section h3,
+.settings-section h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 20px 16px;
+    background: var(--glass-bg);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stat-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+}
+
+.stat-value {
+    font-size: 32px;
+    font-weight: 900;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Финансовая статистика */
+.financial-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.financial-item {
+    padding: 16px;
+    background: var(--glass-bg);
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.financial-item.positive {
+    border-left: 4px solid #4ade80;
+}
+
+.financial-item.negative {
+    border-left: 4px solid #f87171;
+}
+
+.financial-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.financial-value {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--text-primary);
+}
+
+.financial-item.positive .financial-value {
+    color: #4ade80;
+}
+
+.financial-item.negative .financial-value {
+    color: #f87171;
+}
+
+/* Полная история */
+.history-controls {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.filter-btn {
+    flex: 1;
+    padding: 10px 16px;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    color: var(--text-secondary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(102, 126, 234, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.filter-btn:hover {
+    transform: translateY(-2px);
+    border-color: rgba(102, 126, 234, 0.5);
+}
+
+.filter-btn:active {
+    transform: scale(0.95);
+}
+
+.filter-btn:active::before {
+    width: 200px;
+    height: 200px;
+}
+
+.filter-btn.active {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.full-history-list {
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.full-history-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.full-history-list::-webkit-scrollbar-track {
+    background: var(--card-bg);
+    border-radius: 10px;
+}
+
+.full-history-list::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 10px;
+}
+
+.history-detail-item {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 16px;
+    transition: all 0.3s ease;
+}
+
+.history-detail-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.history-detail-item.win {
+    border-left: 4px solid #4ade80;
+}
+
+.history-detail-item.lose {
+    border-left: 4px solid #f87171;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.history-game-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.history-timestamp {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.history-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.history-result-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.history-amount-display {
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.history-amount-display.win {
+    color: #4ade80;
+}
+
+.history-amount-display.lose {
+    color: #f87171;
+}
+
+/* Настройки */
+.settings-btn {
+    width: 100%;
+    padding: 16px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.settings-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.settings-btn:hover {
+    transform: translateY(-2px);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.settings-btn:active {
+    transform: scale(0.98);
+}
+
+.settings-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-icon {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+}
+
+.settings-btn:hover .btn-icon {
+    transform: scale(1.2) rotate(10deg);
+}
+
+.settings-btn.danger {
+    background: var(--secondary-gradient);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
+
+.settings-btn.danger:hover {
+    box-shadow: 0 6px 20px rgba(245, 87, 108, 0.4);
+}
+    border: none;
+}
+
+/* Нижняя навигация */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    justify-content: space-around;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
+    padding: 12px 0 env(safe-area-inset-bottom, 12px);
+    z-index: 1000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border: none;
+    background: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    min-height: 56px;
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    width: 50px;
+    height: 3px;
+    border-radius: 0 0 3px 3px;
+    background: var(--primary-gradient);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-btn:active {
+    transform: scale(0.9);
+}
+
+.nav-btn.active {
+    color: var(--text-primary);
+}
+
+.nav-btn.active::before {
+    transform: translateX(-50%) scaleX(1);
+}
+
+.nav-icon {
+    font-size: 26px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-btn:active .nav-icon {
+    transform: scale(0.85);
+}
+
+.nav-btn.active .nav-icon {
+    filter: drop-shadow(0 0 8px rgba(102, 126, 234, 0.6));
+    animation: navIconBounce 0.6s ease;
+}
+
+@keyframes navIconBounce {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.nav-label {
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.nav-btn.active .nav-label {
+    font-weight: 700;
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+    .game-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .logo {
+        font-size: 24px;
+    }
+    
+    .balance-value {
+        font-size: 18px;
+    }
+    
+    .balance-card {
+        padding: 8px 12px;
+    }
+    
+    .game-card {
+        padding: 20px;
+    }
+    
+    .card-icon {
+        font-size: 56px;
+    }
+    
+    .content {
+        padding: 16px;
+    }
+    
+    .bottom-nav {
+        padding: 10px 0 max(env(safe-area-inset-bottom), 10px);
+    }
+    
+    .nav-icon {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 380px) {
+    .game-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .logo {
+        font-size: 22px;
+    }
+    
+    .balance-value {
+        font-size: 16px;
+    }
+    
+    .game-card {
+        padding: 18px;
+    }
+    
+    .card-icon {
+        font-size: 48px;
+    }
+    
+    .play-btn {
+        padding: 10px;
+        font-size: 13px;
+    }
+}
+
+/* Анимация загрузки */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* ========================================
+   ИГРА РАКЕТКА
+   ======================================== */
+
+/* Игровой хедер */
+.game-header {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    background: var(--glass-bg);
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.back-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:active {
+    transform: scale(0.95);
+}
+
+.game-title {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Контент игры */
+.game-content {
+    padding: 20px;
+    padding-bottom: 100px;
+}
+
+/* Игровая область */
+.rocket-game-area {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 24px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+}
+
+#rocket-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* Множитель */
+.multiplier-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    pointer-events: none;
+}
+
+.multiplier-value {
+    font-size: 72px;
+    font-weight: 900;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+    animation: pulse 1s ease-in-out infinite;
+}
+
+.multiplier-display.glow .multiplier-value {
+    animation: glowPulse 0.3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.8));
+}
+
+@keyframes glowPulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.8));
+    }
+    50% {
+        transform: scale(1.05);
+        filter: drop-shadow(0 0 40px rgba(102, 126, 234, 1));
+    }
+}
+
+/* Ракета */
+.rocket {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-size: 48px;
+    z-index: 5;
+    transition: all 0.1s linear;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+}
+
+.rocket.flying {
+    animation: rocketFly 0.3s ease-in-out infinite;
+}
+
+@keyframes rocketFly {
+    0%, 100% {
+        transform: rotate(0deg) translateY(0);
+    }
+    50% {
+        transform: rotate(-5deg) translateY(-5px);
+    }
+}
+
+.rocket.crashed {
+    animation: explode 0.5s ease-out forwards;
+}
+
+@keyframes explode {
+    0% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5) rotate(180deg);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(0) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* Частицы */
+.particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    animation: particleFloat 2s ease-out forwards;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-100px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Screen shake */
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-10px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(10px);
+    }
+}
+
+/* Панель ставок */
+.bet-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.bet-section {
+    margin-bottom: 20px;
+}
+
+.bet-label {
+    display: block;
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.bet-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.bet-btn {
+    padding: 12px 8px;
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bet-btn:active {
+    transform: scale(0.95);
+}
+
+.bet-btn.active {
+    border-color: #667eea;
+    background: var(--primary-gradient);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+.bet-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* Потенциальный выигрыш */
+.potential-win {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    background: var(--glass-bg);
+    border-radius: 16px;
+    margin-bottom: 16px;
+}
+
+.potential-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.potential-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4ade80;
+}
+
+/* Кнопка старта */
+.start-game-btn {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 16px;
+    background: var(--success-gradient);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(79, 172, 254, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.start-game-btn:active {
+    transform: scale(0.98);
+}
+
+.start-game-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Панель забора выигрыша */
+.cashout-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.cashout-panel.hidden {
+    display: none;
+}
+
+.current-bet-info {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.current-bet-info strong {
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.potential-win-live {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.win-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.win-value {
+    font-size: 32px;
+    font-weight: 900;
+    color: #4ade80;
+    animation: pulse 1s ease-in-out infinite;
+}
+
+/* Кнопка забора */
+.cashout-btn {
+    width: 100%;
+    padding: 20px;
+    border: none;
+    border-radius: 16px;
+    background: var(--warning-gradient);
+    color: white;
+    font-size: 22px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(250, 112, 154, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: cashoutPulse 1s ease-in-out infinite;
+}
+
+@keyframes cashoutPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 4px 20px rgba(250, 112, 154, 0.4);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 8px 40px rgba(250, 112, 154, 0.6);
+    }
+}
+
+.cashout-btn:active {
+    transform: scale(0.98);
+}
+
+/* Панель результата */
+.result-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 30px 20px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.result-panel.hidden {
+    display: none;
+}
+
+.result-info {
+    margin-bottom: 24px;
+}
+
+.result-title {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.result-title.win {
+    color: #4ade80;
+    text-shadow: 0 0 20px rgba(74, 222, 128, 0.5);
+}
+
+.result-title.lose {
+    color: #f87171;
+    text-shadow: 0 0 20px rgba(248, 113, 113, 0.5);
+}
+
+.result-multiplier {
+    font-size: 48px;
+    font-weight: 900;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+}
+
+.result-amount {
+    font-size: 32px;
+    font-weight: 900;
+}
+
+.result-amount.win {
+    color: #4ade80;
+}
+
+.result-amount.lose {
+    color: #f87171;
+}
+
+/* Кнопка играть снова */
+.play-again-btn {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 16px;
+    background: var(--primary-gradient);
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.play-again-btn:active {
+    transform: scale(0.98);
+}
+
+/* Адаптивность для игры */
+@media (max-width: 380px) {
+    .bet-buttons {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .rocket-game-area {
+        height: 350px;
+    }
+    
+    .multiplier-value {
+        font-size: 56px;
+    }
+}
+
+/* ========================================
+   СИСТЕМА КЕЙСОВ
+   ======================================== */
+
+/* Сетка кейсов */
+.cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+}
+
+/* Карточка кейса */
+.case-card {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 24px;
+    padding: 24px;
+    text-align: center;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.case-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+.case-card:hover::before {
+    opacity: 0.1;
+}
+
+.case-card[data-case="starter"] {
+    border-color: rgba(79, 172, 254, 0.3);
+}
+
+.case-card[data-case="lucky"] {
+    border-color: rgba(81, 207, 102, 0.3);
+}
+
+.case-card[data-case="epic"] {
+    border-color: rgba(159, 122, 234, 0.3);
+}
+
+.case-card[data-case="diamond"] {
+    border-color: rgba(255, 215, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(255, 215, 0, 0.15);
+}
+
+.case-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+}
+
+.case-name {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.case-description {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.case-price-tag {
+    display: inline-block;
+    padding: 8px 16px;
+    background: var(--glass-bg);
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffd700;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.open-case-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background: var(--primary-gradient);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+}
+
+.open-case-btn:active {
+    transform: scale(0.95);
+}
+
+/* Модальное окно открытия кейса */
+.case-opening-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(10, 14, 39, 0.98);
+    backdrop-filter: blur(20px);
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.case-opening-modal.active {
+    opacity: 1;
+}
+
+.case-opening-modal.hidden {
+    display: none;
+}
+
+.modal-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.modal-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.close-modal-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-primary);
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-modal-btn:active {
+    transform: scale(0.9);
+}
+
+/* Контейнер ленты */
+.roll-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    padding: 40px 0;
+}
+
+.roll-pointer {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 180px;
+    background: linear-gradient(180deg, transparent 0%, #ffd700 50%, transparent 100%);
+    z-index: 100;
+    pointer-events: none;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+}
+
+.roll-track-wrapper {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.roll-track {
+    display: flex;
+    gap: 20px;
+    padding: 0 50vw;
+    will-change: transform;
+}
+
+/* Элемент на ленте */
+.roll-item {
+    min-width: 120px;
+    width: 120px;
+    height: 160px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    backdrop-filter: blur(10px);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.roll-item[data-rarity="common"] {
+    border-color: #a0aec0;
+    box-shadow: 0 0 15px rgba(160, 174, 192, 0.3);
+}
+
+.roll-item[data-rarity="rare"] {
+    border-color: #4facfe;
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.5);
+}
+
+.roll-item[data-rarity="epic"] {
+    border-color: #9f7aea;
+    box-shadow: 0 0 20px rgba(159, 122, 234, 0.6);
+}
+
+.roll-item[data-rarity="legendary"] {
+    border-color: #ffd700;
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+    animation: legendaryPulse 1s ease-in-out infinite;
+}
+
+@keyframes legendaryPulse {
+    0%, 100% {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(255, 215, 0, 1);
+    }
+}
+
+.item-icon {
+    font-size: 48px;
+}
+
+.item-name {
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    max-width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.item-amount {
+    font-size: 12px;
+    font-weight: 700;
+    color: #4ade80;
+}
+
+/* Панель результата */
+.case-result-panel {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 24px;
+    padding: 30px;
+    backdrop-filter: blur(20px);
+    text-align: center;
+    animation: resultSlideUp 0.5s ease;
+    box-shadow: 0 8px 40px var(--reward-glow, rgba(102, 126, 234, 0.5));
+}
+
+@keyframes resultSlideUp {
+    from {
+        transform: translateX(-50%) translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+    }
+}
+
+.case-result-panel.hidden {
+    display: none;
+}
+
+.result-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--reward-glow, rgba(102, 126, 234, 0.3)) 0%, transparent 70%);
+    pointer-events: none;
+    animation: glowRotate 3s linear infinite;
+}
+
+@keyframes glowRotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.result-item-display {
+    position: relative;
+    z-index: 1;
+}
+
+.result-item-icon {
+    font-size: 80px;
+    margin-bottom: 16px;
+    animation: resultBounce 0.6s ease;
+}
+
+@keyframes resultBounce {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.result-item-name {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 8px;
+}
+
+.result-item-rarity {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.result-item-amount {
+    font-size: 32px;
+    font-weight: 900;
+    color: #4ade80;
+    margin-bottom: 24px;
+}
+
+.open-again-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 16px;
+    background: var(--primary-gradient);
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.open-again-btn:active {
+    transform: scale(0.98);
+}
+
+/* Анимация частиц для кейсов */
+@keyframes caseParticleFloat {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-150px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Адаптивность для кейсов */
+@media (max-width: 480px) {
+    .cases-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .case-card {
+        padding: 20px 16px;
+    }
+
+    .case-icon {
+        font-size: 48px;
+    }
+
+    .roll-item {
+        min-width: 100px;
+        width: 100px;
+        height: 140px;
+    }
+
+    .item-icon {
+        font-size: 40px;
+    }
+
+    .case-result-panel {
+        width: 95%;
+        padding: 24px;
+    }
+
+    .result-item-icon {
+        font-size: 64px;
+    }
+
+    .result-item-name {
+        font-size: 24px;
+    }
+}
+
+/* ========================================
+   LUCKY DICE GAME
+   ======================================== */
+
+/* Область игры Dice */
+.dice-game-area {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 24px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Контейнер кубика */
+.dice-container {
+    perspective: 1000px;
+    width: 150px;
+    height: 150px;
+}
+
+/* 3D кубик */
+.dice-3d {
+    width: 150px;
+    height: 150px;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s ease;
+}
+
+/* Грани кубика */
+.dice-face {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    border: 3px solid #333;
+    border-radius: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 20px;
+    box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Точки на кубике */
+.dot {
+    width: 25px;
+    height: 25px;
+    background: #333;
+    border-radius: 50%;
+    box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Расположение граней */
+.dice-face.front {
+    transform: rotateY(0deg) translateZ(75px);
+}
+
+.dice-face.back {
+    transform: rotateY(180deg) translateZ(75px);
+}
+
+.dice-face.right {
+    transform: rotateY(90deg) translateZ(75px);
+}
+
+.dice-face.left {
+    transform: rotateY(-90deg) translateZ(75px);
+}
+
+.dice-face.top {
+    transform: rotateX(90deg) translateZ(75px);
+}
+
+.dice-face.bottom {
+    transform: rotateX(-90deg) translateZ(75px);
+}
+
+/* Точки на гранях - 1 */
+.dice-face.front {
+    justify-content: center;
+    align-items: center;
+}
+
+/* Точки на гранях - 2 */
+.dice-face.back {
+    justify-content: space-between;
+    padding: 30px;
+}
+
+.dice-face.back .dot:first-child {
+    align-self: flex-start;
+}
+
+.dice-face.back .dot:last-child {
+    align-self: flex-end;
+}
+
+/* Точки на гранях - 3 */
+.dice-face.right {
+    justify-content: space-between;
+    padding: 30px;
+}
+
+.dice-face.right .dot:nth-child(2) {
+    align-self: center;
+}
+
+/* Точки на гранях - 4 */
+.dice-face.left {
+    justify-content: space-between;
+    align-content: space-between;
+    padding: 30px;
+}
+
+/* Точки на гранях - 5 */
+.dice-face.top {
+    justify-content: space-between;
+    align-content: space-between;
+    padding: 30px;
+}
+
+.dice-face.top .dot:nth-child(3) {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Точки на гранях - 6 */
+.dice-face.bottom {
+    justify-content: space-between;
+    align-content: space-between;
+    padding: 30px;
+}
+
+/* Анимация вращения кубика */
+.dice-3d.rolling {
+    animation: diceRoll 2.5s ease-out;
+}
+
+@keyframes diceRoll {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    25% {
+        transform: rotateX(360deg) rotateY(180deg) rotateZ(90deg);
+    }
+    50% {
+        transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg);
+    }
+    75% {
+        transform: rotateX(1080deg) rotateY(540deg) rotateZ(270deg);
+    }
+    100% {
+        transform: rotateX(1440deg) rotateY(720deg) rotateZ(360deg);
+    }
+}
+
+/* Финальные позиции для каждого числа */
+.dice-3d.show-1 {
+    transform: rotateX(0deg) rotateY(0deg);
+}
+
+.dice-3d.show-2 {
+    transform: rotateX(0deg) rotateY(180deg);
+}
+
+.dice-3d.show-3 {
+    transform: rotateX(0deg) rotateY(90deg);
+}
+
+.dice-3d.show-4 {
+    transform: rotateX(0deg) rotateY(-90deg);
+}
+
+.dice-3d.show-5 {
+    transform: rotateX(-90deg) rotateY(0deg);
+}
+
+.dice-3d.show-6 {
+    transform: rotateX(90deg) rotateY(0deg);
+}
+
+/* Таблица выплат */
+.payout-table {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.payout-table h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: center;
+}
+
+.payout-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+}
+
+.payout-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 8px;
+    background: var(--glass-bg);
+    border-radius: 12px;
+    border: 2px solid var(--glass-border);
+    transition: all 0.3s ease;
+}
+
+.payout-item.lose {
+    border-color: rgba(248, 113, 113, 0.5);
+}
+
+.payout-item.win {
+    border-color: rgba(74, 222, 128, 0.5);
+}
+
+.payout-item.jackpot {
+    border-color: rgba(255, 215, 0, 0.5);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(255, 215, 0, 0.05) 100%);
+    animation: jackpotGlow 2s ease-in-out infinite;
+}
+
+@keyframes jackpotGlow {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+    }
+}
+
+.payout-number {
+    font-size: 24px;
+}
+
+.payout-mult {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.payout-item.jackpot .payout-mult {
+    color: #ffd700;
+}
+
+/* Панель ставок Dice */
+.dice-bet-panel {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.dice-bet-btn {
+    padding: 12px 8px;
+    border: 2px solid var(--card-border);
+    border-radius: 12px;
+    background: var(--card-bg);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.dice-bet-btn:active {
+    transform: scale(0.95);
+}
+
+.dice-bet-btn.active {
+    border-color: #667eea;
+    background: var(--primary-gradient);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+.current-bet-display {
+    text-align: center;
+    padding: 16px;
+    background: var(--glass-bg);
+    border-radius: 16px;
+    margin: 16px 0;
+    font-size: 16px;
+}
+
+.current-bet-display strong {
+    color: #ffd700;
+    font-size: 20px;
+}
+
+/* Кнопка броска */
+.roll-dice-btn {
+    width: 100%;
+    padding: 18px;
+    border: none;
+    border-radius: 16px;
+    background: var(--success-gradient);
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(79, 172, 254, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.roll-dice-btn:active {
+    transform: scale(0.98);
+}
+
+/* Панель результата Dice */
+.dice-result-panel {
+    background: var(--card-bg);
+    border: 2px solid var(--card-border);
+    border-radius: 24px;
+    padding: 30px;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    margin-top: 20px;
+}
+
+.dice-result-panel.hidden {
+    display: none;
+}
+
+.dice-result-panel.show {
+    animation: resultSlideUp 0.5s ease;
+}
+
+.dice-result-title {
+    font-size: 28px;
+    font-weight: 900;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+}
+
+.dice-result-number {
+    font-size: 72px;
+    font-weight: 900;
+    margin-bottom: 16px;
+}
+
+.dice-result-multiplier {
+    font-size: 32px;
+    font-weight: 700;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+}
+
+.dice-result-amount {
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: 24px;
+}
+
+/* Анимация частиц для dice */
+@keyframes diceParticleFloat {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-150px) scale(0);
+        opacity: 0;
+    }
+}
+
+/* Адаптивность для Dice */
+@media (max-width: 480px) {
+    .dice-container {
+        width: 120px;
+        height: 120px;
+    }
+
+    .dice-3d,
+    .dice-face {
+        width: 120px;
+        height: 120px;
+    }
+
+    .dice-face.front {
+        transform: rotateY(0deg) translateZ(60px);
+    }
+
+    .dice-face.back {
+        transform: rotateY(180deg) translateZ(60px);
+    }
+
+    .dice-face.right {
+        transform: rotateY(90deg) translateZ(60px);
+    }
+
+    .dice-face.left {
+        transform: rotateY(-90deg) translateZ(60px);
+    }
+
+    .dice-face.top {
+        transform: rotateX(90deg) translateZ(60px);
+    }
+
+    .dice-face.bottom {
+        transform: rotateX(-90deg) translateZ(60px);
+    }
+
+    .dot {
+        width: 20px;
+        height: 20px;
+    }
+
+    .payout-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .dice-game-area {
+        height: 300px;
+    }
+
+    .dice-result-number {
+        font-size: 56px;
+    }
+}

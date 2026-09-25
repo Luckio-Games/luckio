@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0e27">
+    <title>LUCKIO - Gaming Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Telegram Mini App SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <div class="app">
+        <!-- Главная страница -->
+        <div class="page active" id="home-page">
+            <div class="header">
+                <h1 class="logo">LUCKIO</h1>
+                <div class="balance-card">
+                    <span class="balance-label">Баланс</span>
+                    <span class="balance-value" id="balance">10000</span>
+                    <span class="star">⭐</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <!-- DEV кнопки -->
+                <div class="dev-controls">
+                    <button class="dev-btn" id="add-stars">+1000 ⭐</button>
+                    <button class="dev-btn reset" id="reset-progress">Сброс</button>
+                </div>
+
+                <!-- Игровые карточки -->
+                <div class="game-cards">
+                    <div class="game-card">
+                        <div class="card-icon">🎾</div>
+                        <h3>Ракетка</h3>
+                        <p>Классическая игра</p>
+                        <button class="play-btn" id="play-rocket">Играть</button>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="card-icon">🎁</div>
+                        <h3>Кейсы</h3>
+                        <p>Открывай сюрпризы</p>
+                        <button class="play-btn" disabled>Скоро</button>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="card-icon">🎲</div>
+                        <h3>Lucky Dice</h3>
+                        <p>Испытай удачу</p>
+                        <button class="play-btn" id="play-dice">Играть</button>
+                    </div>
+                </div>
+
+                <!-- История игр -->
+                <div class="history-section">
+                    <h2>Последние игры</h2>
+                    <div class="history-list" id="history-list">
+                        <div class="history-empty">История пуста</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница Игры -->
+        <div class="page" id="games-page">
+            <div class="header">
+                <h1 class="logo">Игры</h1>
+                <div class="balance-card">
+                    <span class="balance-value" id="balance-games">10000</span>
+                    <span class="star">⭐</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="game-cards">
+                    <div class="game-card">
+                        <div class="card-icon">🎾</div>
+                        <h3>Ракетка</h3>
+                        <p>Классическая игра</p>
+                        <button class="play-btn" id="play-rocket-games">Играть</button>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="card-icon">🎲</div>
+                        <h3>Lucky Dice</h3>
+                        <p>Испытай удачу</p>
+                        <button class="play-btn" id="play-dice-games">Играть</button>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="card-icon">🎰</div>
+                        <h3>Slots</h3>
+                        <p>Крути барабаны</p>
+                        <button class="play-btn" disabled>Скоро</button>
+                    </div>
+
+                    <div class="game-card">
+                        <div class="card-icon">🃏</div>
+                        <h3>Card Game</h3>
+                        <p>Карточная битва</p>
+                        <button class="play-btn" disabled>Скоро</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница Кейсы -->
+        <div class="page" id="cases-page">
+            <div class="header">
+                <h1 class="logo">Кейсы</h1>
+                <div class="balance-card">
+                    <span class="balance-value" id="balance-cases">10000</span>
+                    <span class="star">⭐</span>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="cases-grid">
+                    <div class="case-card" data-case="starter">
+                        <div class="case-icon">📦</div>
+                        <h3 class="case-name">Starter Case</h3>
+                        <p class="case-description">Начальный кейс для новичков</p>
+                        <div class="case-price-tag">100 ⭐</div>
+                        <button class="open-case-btn" data-case-id="starter">Открыть</button>
+                    </div>
+
+                    <div class="case-card" data-case="lucky">
+                        <div class="case-icon">🍀</div>
+                        <h3 class="case-name">Lucky Case</h3>
+                        <p class="case-description">Удача на твоей стороне</p>
+                        <div class="case-price-tag">250 ⭐</div>
+                        <button class="open-case-btn" data-case-id="lucky">Открыть</button>
+                    </div>
+
+                    <div class="case-card" data-case="epic">
+                        <div class="case-icon">💎</div>
+                        <h3 class="case-name">Epic Case</h3>
+                        <p class="case-description">Эпические награды</p>
+                        <div class="case-price-tag">500 ⭐</div>
+                        <button class="open-case-btn" data-case-id="epic">Открыть</button>
+                    </div>
+
+                    <div class="case-card" data-case="diamond">
+                        <div class="case-icon">👑</div>
+                        <h3 class="case-name">Diamond Case</h3>
+                        <p class="case-description">Легендарные сокровища</p>
+                        <div class="case-price-tag">1000 ⭐</div>
+                        <button class="open-case-btn" data-case-id="diamond">Открыть</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Модальное окно открытия кейса -->
+        <div class="case-opening-modal hidden" id="case-opening-modal">
+            <div class="modal-header">
+                <h2 id="opening-case-name">Case Name</h2>
+                <button class="close-modal-btn" id="close-case-opening">✕</button>
+            </div>
+
+            <div class="roll-container">
+                <div class="roll-pointer"></div>
+                <div class="roll-track-wrapper">
+                    <div class="roll-track" id="items-track"></div>
+                </div>
+            </div>
+
+            <div class="case-result-panel hidden" id="case-result-panel">
+                <div class="result-glow"></div>
+                <div class="result-item-display">
+                    <div class="result-item-icon" id="result-item-icon">🟡</div>
+                    <div class="result-item-name" id="result-item-name">Item Name</div>
+                    <div class="result-item-rarity" id="result-item-rarity">Legendary</div>
+                    <div class="result-item-amount" id="result-item-amount">+1000 ⭐</div>
+                </div>
+                <button class="open-again-btn" id="open-again-btn">Открыть ещё</button>
+            </div>
+        </div>
+
+        <!-- Страница Игра Ракетка -->
+        <div class="page" id="rocket-game-page">
+            <div class="game-header">
+                <button class="back-btn" id="back-from-rocket">← Назад</button>
+                <h1 class="game-title">Ракетка 🎾</h1>
+                <div class="balance-card">
+                    <span class="balance-value" id="balance-rocket">10000</span>
+                    <span class="star">⭐</span>
+                </div>
+            </div>
+
+            <div class="game-content">
+                <!-- Игровое поле -->
+                <div class="rocket-game-area" id="rocket-game-area">
+                    <canvas id="rocket-canvas"></canvas>
+                    
+                    <!-- Множитель -->
+                    <div class="multiplier-display" id="multiplier-display">
+                        <div class="multiplier-value">1.00x</div>
+                    </div>
+
+                    <!-- Ракета -->
+                    <div class="rocket" id="rocket">🚀</div>
+
+                    <!-- Частицы -->
+                    <div class="particles" id="particles"></div>
+                </div>
+
+                <!-- Панель ставок -->
+                <div class="bet-panel" id="bet-panel">
+                    <div class="bet-section">
+                        <label class="bet-label">Выберите ставку</label>
+                        <div class="bet-buttons">
+                            <button class="bet-btn" data-bet="10">10 ⭐</button>
+                            <button class="bet-btn" data-bet="50">50 ⭐</button>
+                            <button class="bet-btn active" data-bet="100">100 ⭐</button>
+                            <button class="bet-btn" data-bet="500">500 ⭐</button>
+                            <button class="bet-btn" data-bet="1000">1000 ⭐</button>
+                        </div>
+                    </div>
+
+                    <div class="potential-win" id="potential-win">
+                        <span class="potential-label">Потенциальный выигрыш:</span>
+                        <span class="potential-value">100 ⭐</span>
+                    </div>
+
+                    <button class="start-game-btn" id="start-rocket-btn">СТАРТ</button>
+                </div>
+
+                <!-- Панель во время игры -->
+                <div class="cashout-panel hidden" id="cashout-panel">
+                    <div class="current-bet-info">
+                        <span>Ставка: <strong id="current-bet">100</strong> ⭐</span>
+                    </div>
+                    <div class="potential-win-live">
+                        <span class="win-label">Выигрыш:</span>
+                        <span class="win-value" id="win-value">100 ⭐</span>
+                    </div>
+                    <button class="cashout-btn" id="cashout-btn">ЗАБРАТЬ</button>
+                </div>
+
+                <!-- Панель результата -->
+                <div class="result-panel hidden" id="result-panel">
+                    <div class="result-info">
+                        <div class="result-title" id="result-title">Победа!</div>
+                        <div class="result-multiplier" id="result-multiplier">2.35x</div>
+                        <div class="result-amount" id="result-amount">+235 ⭐</div>
+                    </div>
+                    <button class="play-again-btn" id="play-again-btn">ИГРАТЬ СНОВА</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница Lucky Dice -->
+        <div class="page" id="dice-game-page">
+            <div class="game-header">
+                <button class="back-btn" id="back-from-dice">← Назад</button>
+                <h1 class="game-title">Lucky Dice 🎲</h1>
+                <div class="balance-card">
+                    <span class="balance-value" id="balance-dice">10000</span>
+                    <span class="star">⭐</span>
+                </div>
+            </div>
+
+            <div class="game-content">
+                <!-- Область игры -->
+                <div class="dice-game-area" id="dice-game-area">
+                    <!-- 3D кубик -->
+                    <div class="dice-container">
+                        <div class="dice-3d" id="dice-3d">
+                            <div class="dice-face front">
+                                <span class="dot"></span>
+                            </div>
+                            <div class="dice-face back">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="dice-face right">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="dice-face left">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="dice-face top">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="dice-face bottom">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Таблица выплат -->
+                <div class="payout-table">
+                    <h3>Таблица выплат</h3>
+                    <div class="payout-grid">
+                        <div class="payout-item lose">
+                            <span class="payout-number">1️⃣</span>
+                            <span class="payout-mult">x0</span>
+                        </div>
+                        <div class="payout-item">
+                            <span class="payout-number">2️⃣</span>
+                            <span class="payout-mult">x0.5</span>
+                        </div>
+                        <div class="payout-item">
+                            <span class="payout-number">3️⃣</span>
+                            <span class="payout-mult">x1</span>
+                        </div>
+                        <div class="payout-item win">
+                            <span class="payout-number">4️⃣</span>
+                            <span class="payout-mult">x2</span>
+                        </div>
+                        <div class="payout-item win">
+                            <span class="payout-number">5️⃣</span>
+                            <span class="payout-mult">x3</span>
+                        </div>
+                        <div class="payout-item jackpot">
+                            <span class="payout-number">6️⃣</span>
+                            <span class="payout-mult">x5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Панель ставок -->
+                <div class="dice-bet-panel" id="dice-bet-panel">
+                    <div class="bet-section">
+                        <label class="bet-label">Выберите ставку</label>
+                        <div class="bet-buttons">
+                            <button class="dice-bet-btn" data-bet="10">10 ⭐</button>
+                            <button class="dice-bet-btn" data-bet="50">50 ⭐</button>
+                            <button class="dice-bet-btn active" data-bet="100">100 ⭐</button>
+                            <button class="dice-bet-btn" data-bet="500">500 ⭐</button>
+                            <button class="dice-bet-btn" data-bet="1000">1000 ⭐</button>
+                        </div>
+                    </div>
+
+                    <div class="current-bet-display">
+                        <span>Ставка: <strong id="current-dice-bet">100</strong> ⭐</span>
+                    </div>
+
+                    <button class="roll-dice-btn" id="roll-dice-btn">🎲 БРОСИТЬ</button>
+                </div>
+
+                <!-- Панель результата -->
+                <div class="dice-result-panel hidden" id="dice-result-panel">
+                    <div class="result-info">
+                        <div class="dice-result-title" id="dice-result-title">Результат</div>
+                        <div class="dice-result-number" id="dice-result-number">6</div>
+                        <div class="dice-result-multiplier" id="dice-result-multiplier">x5.0</div>
+                        <div class="dice-result-amount" id="dice-result-amount">+500 ⭐</div>
+                    </div>
+                    <button class="play-again-btn" id="dice-play-again-btn">ИГРАТЬ СНОВА</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница Профиль -->
+        <div class="page" id="profile-page">
+            <div class="header">
+                <h1 class="logo">Профиль</h1>
+            </div>
+
+            <div class="content">
+                <div class="profile-card">
+                    <div class="profile-avatar">👤</div>
+                    <h2 class="profile-name">Player</h2>
+                    <div class="profile-balance">
+                        <span class="balance-value" id="balance-profile">10000</span>
+                        <span class="star">⭐</span>
+                    </div>
+                </div>
+
+                <!-- Основная статистика -->
+                <div class="stats-section">
+                    <h3>📊 Статистика игр</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">🎮</div>
+                            <div class="stat-value" id="total-games">0</div>
+                            <div class="stat-label">Всего игр</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-value" id="total-wins">0</div>
+                            <div class="stat-label">Побед</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">😢</div>
+                            <div class="stat-value" id="total-losses">0</div>
+                            <div class="stat-label">Поражений</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-icon">📈</div>
+                            <div class="stat-value" id="win-rate">0%</div>
+                            <div class="stat-label">Процент побед</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Финансовая статистика -->
+                <div class="financial-stats">
+                    <h3>💰 Финансы</h3>
+                    <div class="financial-grid">
+                        <div class="financial-item positive">
+                            <div class="financial-label">Всего заработано</div>
+                            <div class="financial-value" id="total-earned">0 ⭐</div>
+                        </div>
+                        <div class="financial-item negative">
+                            <div class="financial-label">Всего потрачено</div>
+                            <div class="financial-value" id="total-spent">0 ⭐</div>
+                        </div>
+                        <div class="financial-item">
+                            <div class="financial-label">Чистая прибыль</div>
+                            <div class="financial-value" id="net-profit">0 ⭐</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Полная история игр -->
+                <div class="full-history-section">
+                    <h3>📜 История игр</h3>
+                    <div class="history-controls">
+                        <button class="filter-btn active" data-filter="all">Все</button>
+                        <button class="filter-btn" data-filter="win">Победы</button>
+                        <button class="filter-btn" data-filter="lose">Поражения</button>
+                    </div>
+                    <div class="full-history-list" id="full-history-list">
+                        <div class="history-empty">История пуста</div>
+                    </div>
+                </div>
+
+                <!-- Настройки -->
+                <div class="settings-section">
+                    <h3>⚙️ Настройки</h3>
+                    <button class="settings-btn" id="clear-history-profile">
+                        <span class="btn-icon">🗑️</span>
+                        <span>Очистить историю</span>
+                    </button>
+                    <button class="settings-btn danger" id="reset-all-profile">
+                        <span class="btn-icon">⚠️</span>
+                        <span>Сбросить весь прогресс</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижняя навигация -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="home-page">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Главная</span>
+            </button>
+            <button class="nav-btn" data-page="games-page">
+                <span class="nav-icon">🎮</span>
+                <span class="nav-label">Игры</span>
+            </button>
+            <button class="nav-btn" data-page="cases-page">
+                <span class="nav-icon">🎁</span>
+                <span class="nav-label">Кейсы</span>
+            </button>
+            <button class="nav-btn" data-page="profile-page">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Профиль</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="js/telegram.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/rocket.js"></script>
+    <script src="js/cases.js"></script>
+    <script src="js/dice.js"></script>
+</body>
+</html>

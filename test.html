@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Rocket Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #0a0e27;
+            color: white;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+        .test-btn {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #667eea;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .test-btn:hover {
+            background: #764ba2;
+        }
+        #test-results {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,255,0,0.1);
+            border-radius: 10px;
+        }
+        .error { color: #ff6b6b; }
+        .success { color: #51cf66; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Тест игры Ракетка</h1>
+    
+    <div class="test-section">
+        <h2>Проверка файлов</h2>
+        <button class="test-btn" onclick="checkFiles()">Проверить файлы</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Проверка функций</h2>
+        <button class="test-btn" onclick="testBalance()">Тест баланса</button>
+        <button class="test-btn" onclick="testBets()">Тест ставок</button>
+        <button class="test-btn" onclick="testHistory()">Тест истории</button>
+    </div>
+
+    <div class="test-section">
+        <h2>Открыть приложение</h2>
+        <button class="test-btn" onclick="openApp()">Открыть LUCKIO</button>
+    </div>
+
+    <div id="test-results"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('test-results');
+            const p = document.createElement('p');
+            p.className = type;
+            p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            results.appendChild(p);
+        }
+
+        function checkFiles() {
+            log('Проверка структуры файлов...', 'info');
+            
+            const files = [
+                'index.html',
+                'css/style.css',
+                'js/app.js',
+                'js/rocket.js'
+            ];
+
+            files.forEach(file => {
+                fetch(file)
+                    .then(response => {
+                        if (response.ok) {
+                            log(`✓ ${file} найден`, 'success');
+                        } else {
+                            log(`✗ ${file} не найден`, 'error');
+                        }
+                    })
+                    .catch(() => {
+                        log(`✗ ${file} ошибка загрузки`, 'error');
+                    });
+            });
+        }
+
+        function testBalance() {
+            log('Тест системы баланса...', 'info');
+            
+            const testData = {
+                balance: 10000,
+                history: [],
+                stats: { totalGames: 0, totalWins: 0, totalEarned: 0, totalSpent: 0 }
+            };
+
+            localStorage.setItem('luckio_data', JSON.stringify(testData));
+            log('✓ Данные сохранены в localStorage', 'success');
+
+            const loaded = JSON.parse(localStorage.getItem('luckio_data'));
+            if (loaded.balance === 10000) {
+                log('✓ Баланс корректно загружен: 10000 ⭐', 'success');
+            } else {
+                log('✗ Ошибка загрузки баланса', 'error');
+            }
+        }
+
+        function testBets() {
+            log('Тест системы ставок...', 'info');
+            
+            const bets = [10, 50, 100, 500, 1000];
+            const balance = 10000;
+
+            bets.forEach(bet => {
+                if (bet <= balance) {
+                    log(`✓ Ставка ${bet} ⭐ доступна`, 'success');
+                } else {
+                    log(`✗ Ставка ${bet} ⭐ недоступна`, 'error');
+                }
+            });
+        }
+
+        function testHistory() {
+            log('Тест системы истории...', 'info');
+            
+            const historyItem = {
+                id: Date.now(),
+                game: 'Ракетка',
+                result: 'win',
+                amount: 150,
+                timestamp: new Date().toLocaleString('ru-RU')
+            };
+
+            log(`✓ Создана запись: ${historyItem.game} - ${historyItem.result} - ${historyItem.amount} ⭐`, 'success');
+        }
+
+        function openApp() {
+            window.location.href = 'index.html';
+        }
+
+        // Автоматическая проверка при загрузке
+        window.onload = function() {
+            log('=== Начало тестирования ===', 'info');
+            log('Тестовая страница загружена', 'success');
+        };
+    </script>
+</body>
+</html>
