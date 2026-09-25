@@ -153,15 +153,30 @@ class DebugPanel {
             statusEl.style.color = isOnline ? '#4ade80' : '#f87171';
 
             // Проверяем загрузку пользователя
-            const backendUser = this.telegram?.backendUser || null;
+            let backendUser = this.telegram?.backendUser || null;
             const backendUserEl = document.getElementById('debug-backend-user');
+            
+            // Если пользователь не загружен, но backend онлайн и Telegram доступен - пытаемся загрузить
+            if (!backendUser && isOnline && this.telegram && this.telegram.user?.id) {
+                console.log('🔄 Debug Panel: Backend user not loaded, attempting to load...');
+                backendUserEl.textContent = 'LOADING...';
+                backendUserEl.style.color = '#f59e0b';
+                
+                const loadResult = await this.telegram.loadUserFromBackend();
+                
+                if (loadResult) {
+                    backendUser = this.telegram.backendUser;
+                }
+            }
             
             if (backendUser) {
                 backendUserEl.textContent = 'LOADED';
                 backendUserEl.style.color = '#4ade80';
+                console.log('✅ Debug Panel: Backend user is loaded');
             } else {
                 backendUserEl.textContent = isOnline ? 'NOT LOADED' : 'OFFLINE';
                 backendUserEl.style.color = isOnline ? '#f59e0b' : '#f87171';
+                console.log('⚠️ Debug Panel: Backend user not loaded');
             }
 
             // Ошибки API
