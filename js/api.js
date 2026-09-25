@@ -99,10 +99,11 @@ class LuckioAPI {
 
     // GET запрос с обработкой ошибок
     async get(endpoint) {
-        if (!this.useBackend || !this.isOnline) {
-            throw new Error('Backend недоступен');
+        if (!this.useBackend) {
+            throw new Error('Backend отключен');
         }
 
+        // Не проверяем isOnline для первых запросов
         try {
             const response = await this.fetchWithTimeout(`${this.baseURL}${endpoint}`, {
                 method: 'GET',
