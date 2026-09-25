@@ -256,8 +256,8 @@ class RocketGame {
 
             const elapsed = Date.now() - startTime;
             
-            // Увеличиваем множитель (быстрее со временем)
-            const speed = 0.01 + (elapsed / 100000);
+            // Увеличиваем множитель (медленнее)
+            const speed = 0.003 + (elapsed / 300000);
             this.multiplier += speed;
 
             // Обновляем UI
